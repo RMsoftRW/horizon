@@ -1,0 +1,29 @@
+language: php
+php:
+ - "7.0"
+ - "7.1"
+ - "nightly"
+
+matrix:
+ fast_finish: true
+
+os:
+ - linux
+
+before_script:
+ - git clone git://github.com/jedisct1/libsodium.git
+ - cd libsodium
+ - ./autogen.sh
+ - ./configure --disable-dependency-tracking
+ - make
+ - sudo make install
+ - sudo /sbin/ldconfig
+ - cd ..
+ - rm -fr libsodium
+
+script:
+ - phpize
+ - ./configure --with-sodium
+ - make clean
+ - make
+ - env NO_INTERACTION=1 make test
